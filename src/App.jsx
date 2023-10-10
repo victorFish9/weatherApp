@@ -2,6 +2,8 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import WeatherView from './components/WeatherView';
+import WeatherInput from './components/WeatherInput';
 
 function App() {
   const [weatherData, setWeatherData] = useState(null);
@@ -36,23 +38,8 @@ function App() {
 
   return (
     <>
-      <h2>Welcome to Weather app!</h2>
-      <input type='text' value={city} onChange={handleCityChange} /><br /><br />
-      <button onClick={fetchWeatherData}>Search</button>
-      {error ? (<p>{error}</p>) : (weatherData ? (
-        <div>
-          <h4>Weather in {weatherData.name}</h4>
-          <p>Temperature: {Number(weatherData.main.temp - 273.15).toFixed(1)}C</p>
-          <p>Weather: {weatherData.weather[0].main}</p>
-          {weatherData.weather[0].icon && (
-            <img src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`}
-              alt="Weather Icon" />
-          )}
-        </div>
-      ) : (
-        <p>Enter city name</p>
-      )
-      )}
+      <WeatherInput city={city} handleCityChange={handleCityChange} fetchWeatherData={fetchWeatherData} />
+      <WeatherView error={error} weatherData={weatherData} />
 
     </>
   )

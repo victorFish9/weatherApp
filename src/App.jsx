@@ -16,13 +16,20 @@ function App() {
   const fetchWeatherData = () => {
     if (city) {
       fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=9343f8a9dd9aa86bc05ceb1398921a96`)
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('City not found');
+          }
+          return response.json();
+        })
         .then((data) => {
+          setError(null);
           setWeatherData(data);
         })
         .catch((error) => {
           console.error("Error is this: ", error);
           setWeatherData(null);
+          setError("City not found. Please enter a valid city name.");
         })
     }
   }
@@ -32,7 +39,7 @@ function App() {
       <h2>Welcome to Weather app!</h2>
       <input type='text' value={city} onChange={handleCityChange} /><br /><br />
       <button onClick={fetchWeatherData}>Search</button>
-      {weatherData ? (
+      {error ? (<p>{error}</p>) : (weatherData ? (
         <div>
           <h4>Weather in {weatherData.name}</h4>
           <p>Temperature: {Number(weatherData.main.temp - 273.15).toFixed(1)}C</p>
@@ -44,6 +51,7 @@ function App() {
         </div>
       ) : (
         <p>Enter city name</p>
+      )
       )}
 
     </>
